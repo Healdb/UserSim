@@ -117,10 +117,11 @@ def get_history(r, user, limit=LIMIT):
 	The average will probably be 20k-30k words.
 	"""
 	try:
-		redditor = r.get_redditor(user)
-		comments = redditor.get_comments(limit=limit)
-		body = []
-		total_sentences = 0
+		subreddit = r.get_subreddit(user)
+		subreddit_comments = subreddit.get_comments()
+		subreddit_comments.replace_more_comments(limit=limit, threshold=-10000)
+		flat_comments = praw.helpers.flatten_tree(post.comments)
+                for comment in flat_comments:
 		for c in comments:
 			if not c.distinguished:
 				body.append(c.body)
